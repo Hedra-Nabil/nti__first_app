@@ -17,7 +17,7 @@ A beautiful and modern BMI (Body Mass Index) calculator built with Flutter using
 
 | Welcome Screen | Input Screen | Results Screen |
 |:--------------:|:------------:|:--------------:|
-| ![Welcome]((https://github.com/Hedra-Nabil/nti__first_app/blob/main/1.jpg)) | ![Input]((https://github.com/Hedra-Nabil/nti__first_app/blob/main/2.jpg)) | ![Results]((https://github.com/Hedra-Nabil/nti__first_app/blob/main/3.jpg)) |
+| ![Welcome](https://github.com/Hedra-Nabil/nti__first_app/blob/main/1.jpg) | ![Input](https://github.com/Hedra-Nabil/nti__first_app/blob/main/2.jpg) | ![Results](https://github.com/Hedra-Nabil/nti__first_app/blob/main/3.jpg) |
 
 ## 🚀 Getting Started
 

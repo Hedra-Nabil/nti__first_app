@@ -1,16 +1,32 @@
-# nti__first_app
+# nti_first_app
+# BMI Calculator App 📱
 
-A new Flutter project.
+A beautiful and modern BMI (Body Mass Index) calculator built with Flutter using BLoC/Cubit state management.
 
-## Getting Started
+## 🌟 Features
 
-This project is a starting point for a Flutter application.
+- **Beautiful UI Design**: Modern and clean interface with custom colors and SVG illustrations
+- **BMI Calculation**: Accurate BMI calculation based on height and weight
+- **Gender Selection**: Support for both male and female users
+- **Health Categories**: Displays BMI categories (Underweight, Normal, Overweight, Obese)
+- **Health Advice**: Provides personalized health recommendations based on BMI results
+- **State Management**: Built with BLoC/Cubit for efficient state management
+- **Responsive Design**: Works perfectly on different screen sizes
 
-A few resources to get you started if this is your first Flutter project:
+## 📱 Screenshots
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+| Welcome Screen | Input Screen | Results Screen |
+|:--------------:|:------------:|:--------------:|
+| ![Welcome](screenshots/welcome.png) | ![Input](screenshots/input.png) | ![Results](screenshots/results.png) |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Flutter SDK (>=3.0.0)
+- Dart SDK (>=2.17.0)
+- Android Studio / VS Code
+
+### Installation
+
+1. **Clone the repository**

@@ -5,8 +5,8 @@ import 'package:nti__first_app/BMI_APP/Core/features/presentation/compoments/cut
 import 'package:nti__first_app/BMI_APP/Core/features/presentation/compoments/iamge_container.dart';
 import 'package:nti__first_app/BMI_APP/Core/features/presentation/compoments/constants/app_image.dart';
 import 'package:nti__first_app/BMI_APP/Core/features/presentation/compoments/theme/app_color.dart';
-
-import 'package:nti__first_app/BMI_APP/Core/features/presentation/controllers/cubit/bmi_calc_cubit_cubit.dart';
+import 'package:nti__first_app/BMI_APP/Core/features/presentation/controllers/git_bmi/cubit/bmi_result_cubit.dart';
+import 'package:nti__first_app/BMI_APP/Core/features/presentation/controllers/git_bmi/cubit/bmi_result_state.dart';
 
 class BmiHomeScreen extends StatefulWidget {
   const BmiHomeScreen({super.key});
@@ -67,7 +67,7 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
     if (weightController.text.isNotEmpty) {
       int value = int.parse(weightController.text);
       if (value > 1) {
-        weightController.text = (value).toString();
+        weightController.text = (value - 1).toString();
         setState(() {});
       }
     }
@@ -79,12 +79,14 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
         genderSelection.isNotEmpty) {
       String userName = nameController.text.trim();
 
-      context.read<BmiCalcCubitCubit>().calculateBmi(
-            height: double.parse(heightController.text),
-            weight: double.parse(weightController.text),
-            gender: genderSelection,
-            name: userName,
-          );
+      
+      context.read<BmiResultCubit>().getBmiRes(
+        height: heightController.text,
+        weight: weightController.text,
+        unit: 'metric',
+        gender: genderSelection,
+        name: userName.isEmpty ? 'User' : userName,
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fill Height, Weight and Gender')),
@@ -94,21 +96,23 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<BmiCalcCubitCubit, BmiCalcCubitState>(
+    return BlocListener<BmiResultCubit, BmiResultState>(
       listener: (context, state) {
-        if (state is BmiCalcSuccess) {
-          
+        if (state is BmiResSuccess) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BmiResult(
-                height: double.parse(heightController.text),
-                weight: double.parse(weightController.text),
-                gender: state.gender,
-                name: state.name,
-                bmi: state.bmi,
-              ),
+              builder:
+                  (context) => BmiResult(
+                    bmiModel: state.bmiModel,
+                    gender: state.gender,
+                    name: state.name,
+                  ),
             ),
+          );
+        } else if (state is BmiResError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
           );
         }
       },
@@ -116,119 +120,142 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
         appBar: AppBar(
           title: Text(
             'B M I',
-            style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w900),
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600),
           ),
           centerTitle: true,
           backgroundColor: AppColor.lightBlue,
         ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                children: [
-                  SizedBox(height: 35),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [Text('Name')]),
-                  SizedBox(height: 10),
-                  CustomTextFormField(controller: nameController),
-                  SizedBox(height: 20),
-                  Row(children: [Text('Birth Date')]),
-                  SizedBox(height: 10),
-                  CustomTextFormField(controller: birthDateController),
-                  SizedBox(height: 20),
-                  Row(
+        body: BlocBuilder<BmiResultCubit, BmiResultState>(
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Column(
                     children: [
-                      Text(
-                        'Choose Gender',
-                        style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [Text('Name')],
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildGenderSelection(
-                        imagePath: AppImage.maleImage,
-                        gender: 'male',
-                        label: 'Male',
-                      ),
-                      SizedBox(width: 60),
-                      _buildGenderSelection(
-                        imagePath: AppImage.femaleImage,
-                        gender: 'female',
-                        label: 'Female',
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 21),
-                  Row(
-                    children: [
-                      Text(
-                        'Your Height(cm)',
-                        style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  _buildNumberField(
-                    controller: heightController,
-                    onIncrement: _incrementHeight,
-                    onDecrement: _decrementHeight,
-                  ),
-                  SizedBox(height: 21),
-                  Row(
-                    children: [
-                      Text(
-                        'Your Weight(kg)',
-                        style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  _buildNumberField(
-                    controller: weightController,
-                    onIncrement: _incrementWeight,
-                    onDecrement: _decrementWeight,
-                  ),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: _calculateBMI,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                      decoration: BoxDecoration(
-                        color: AppColor.purpl2,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      SizedBox(height: 7),
+                      CustomTextFormField(controller: nameController),
+                      SizedBox(height: 7),
+                      Row(children: [Text('Birth Date')]),
+                      SizedBox(height: 7),
+                      CustomTextFormField(controller: birthDateController),
+                      SizedBox(height: 7),
+                      Row(
                         children: [
                           Text(
-                            'Calculate BMI',
+                            'Choose Gender',
                             style: TextStyle(
-                              color: AppColor.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      //SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildGenderSelection(
+                            imagePath: AppImage.maleImage,
+                            gender: 'male',
+                            label: 'Male',
+                          ),
+                          SizedBox(width: 40),
+                          _buildGenderSelection(
+                            imagePath: AppImage.femaleImage,
+                            gender: 'female',
+                            label: 'Female',
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Text(
+                            'Your Height(cm)',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      _buildNumberField(
+                        controller: heightController,
+                        onIncrement: _incrementHeight,
+                        onDecrement: _decrementHeight,
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Text(
+                            'Your Weight(kg)',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      _buildNumberField(
+                        controller: weightController,
+                        onIncrement: _incrementWeight,
+                        onDecrement: _decrementWeight,
+                      ),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: state is BmiResLoading ? null : _calculateBMI,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 15,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                state is BmiResLoading
+                                    ? Colors.grey
+                                    : AppColor.purpl2,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (state is BmiResLoading)
+                                CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    AppColor.white,
+                                  ),
+                                )
+                              else
+                                Text(
+                                  'Calculate BMI',
+                                  style: TextStyle(
+                                    color: AppColor.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 50),
+                    ],
                   ),
-                  SizedBox(height: 30),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );
@@ -285,10 +312,7 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
           onTap: onDecrement,
           child: Icon(Icons.remove),
         ),
-        suffixIcon: GestureDetector(
-          onTap: onIncrement,
-          child: Icon(Icons.add),
-        ),
+        suffixIcon: GestureDetector(onTap: onIncrement, child: Icon(Icons.add)),
       ),
     );
   }

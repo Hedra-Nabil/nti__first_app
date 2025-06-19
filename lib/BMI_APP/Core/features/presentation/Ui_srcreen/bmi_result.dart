@@ -21,7 +21,7 @@ class BmiResult extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('BMI Result'),
+        title: Text('BMI Result', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: AppColor.purpl2,
       ),

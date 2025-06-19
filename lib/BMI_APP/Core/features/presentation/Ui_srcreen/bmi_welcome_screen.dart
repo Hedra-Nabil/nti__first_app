@@ -46,17 +46,19 @@ class BmiWelcomeScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 33),
+                      SizedBox(height: 55),
                       Text(
                         'Know Your Body Better,\nGet Your BMI Score in Less\nThan a Minute!',
                         style: TextStyle(
                           color: AppColor.white,
-                          fontSize: 18,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          //height: 1.3,
+                          height: 1.3,
+                          overflow: TextOverflow.ellipsis,
+                          //maxLines: 2,
                         ),
                       ),
-                      //SizedBox(height: 10),
+                      SizedBox(height: 10),
                       Text(
                         'It takes just 30 seconds - and your health is\nworth it!',
                         style: TextStyle(
@@ -65,7 +67,7 @@ class BmiWelcomeScreen extends StatelessWidget {
                           height: 1.4,
                         ),
                       ),
-                      //SizedBox(height: 10),
+                      SizedBox(height: 10),
                       Container(
                         width: double.infinity,
                         height: 2,
@@ -86,6 +88,9 @@ class BmiWelcomeScreen extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 18),
                           decoration: BoxDecoration(
                             color: Color(0xFF4A3F8A),
+                            border: Border.all(
+                              color: Color.fromARGB(255, 135, 117, 237),
+                            ),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Center(
@@ -93,14 +98,14 @@ class BmiWelcomeScreen extends StatelessWidget {
                               'Get Started',
                               style: TextStyle(
                                 color: AppColor.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 5),
+                      SizedBox(height: 10),
                     ],
                   ),
                 ),
@@ -108,7 +113,7 @@ class BmiWelcomeScreen extends StatelessWidget {
             ),
             Column(
               children: [
-                //SizedBox(height: 10),
+                SizedBox(height: 10),
                 Container(
                   alignment: Alignment.topCenter,
                   width: double.infinity,

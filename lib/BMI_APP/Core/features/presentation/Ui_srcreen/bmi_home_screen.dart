@@ -136,6 +136,7 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
           child: BlocBuilder<BmiResultCubit, BmiResultState>(
             builder: (context, state) {
               return SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
@@ -295,7 +296,7 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 90),
                       ],
                     ),
                   ),
